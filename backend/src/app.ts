@@ -16,4 +16,9 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');
 });
 
+app.use('/api/users', (req: Request, res: Response) => {
+  res.send('User route');
+});
+
+
 export { app, PORT };
