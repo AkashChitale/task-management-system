@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
+import UserRouter from './routes/user.route.js';
 
 dotenv.config();
 
@@ -16,9 +17,7 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');
 });
 
-app.use('/api/users', (req: Request, res: Response) => {
-  res.send('User route');
-});
+app.use('/api/users', UserRouter);
 
 
 export { app, PORT };
