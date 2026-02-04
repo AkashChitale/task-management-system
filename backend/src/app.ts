@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import UserRouter from './routes/user.route.js';
+import TodoRouter from './routes/todo.route.js';
 
 dotenv.config();
 
@@ -14,10 +15,12 @@ const PORT: number = parseInt(process.env.PORT || "3000", 10);
 app.use(express.json());
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
+  res.send('Hello World  How are you !');
 });
 
 app.use('/api/users', UserRouter);
+
+app.use('/todos', TodoRouter);
 
 
 export { app, PORT };
