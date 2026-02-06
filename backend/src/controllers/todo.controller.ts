@@ -20,11 +20,23 @@ const createTodo = async (req: AuthRequest, res: Response) => {
     if(!userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    const { title, description } = req.body;
+    const { title, description, dueDate } = req.body;
     if(!title) {
       return res.status(400).json({ message: "Title is required" });
     }
-    const newTodo = new Todo({ title, description, userId });
+    if (dueDate){
+
+      const parsedDate = new Date(dueDate);
+
+      if (isNaN(parsedDate.getTime())) {
+        return res.status(400).json({ message: "Invalid due date format" });
+      }
+
+      if (parsedDate <= new Date()) {
+        return res.status(400).json({ message: "Due date must be in the future" });
+      }
+  }
+    const newTodo = new Todo({ title, description, dueDate, userId });
     await newTodo.save();
     res.status(201).json(newTodo);
   } catch (error) {

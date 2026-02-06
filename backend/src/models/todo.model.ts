@@ -7,6 +7,7 @@ interface ITodo extends Document {
   completed: boolean;
   userId: mongoose.Schema.Types.ObjectId | string;   
   createdAt: Date;
+  dueDate?: Date;
 }
 
 const todoSchema = new mongoose.Schema<ITodo>({
@@ -29,6 +30,9 @@ const todoSchema = new mongoose.Schema<ITodo>({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    dueDate: {
+        type: Date  
     }
 });
 
