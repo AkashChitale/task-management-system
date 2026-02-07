@@ -5,6 +5,7 @@ interface IUser extends Document {
   username: string;
   email: string;
   password: string;
+  refreshToken?: string | null;
   comparePassword(candidatePassword: string): Promise<boolean>;
 }
 
@@ -22,6 +23,10 @@ const userSchema = new mongoose.Schema<IUser>({
     password: { 
         type : String, 
         required: true 
+    },
+    refreshToken: {
+        type: String,
+        default: null
     }
 });
 

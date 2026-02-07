@@ -18,7 +18,7 @@ const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => 
     }
 
     try {
-        const secret = process.env.JWT_SECRET || "your_jwt_secret_key";
+        const secret = process.env.ACCESS_TOKEN_SECRET! || "your_access_token_secret_key";
         const decoded = jwt.verify(token, secret) as { userId: string };
         // res.send(decoded.userId);
         req.userId = decoded.userId;

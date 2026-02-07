@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import User, { IUser } from '../models/user.model.js'; 
 import jwt from 'jsonwebtoken';
+import { generateAccessToken, generateRefreshToken } from '../utils/token.js';
 
 
 const registerUser = async (req: Request, res: Response) => {
@@ -50,17 +51,48 @@ const loginUser = async (req: Request, res: Response) => {
     }
 
     //Generate JWT token
-    const token: any = jwt.sign(
-      { userId: existingUser._id, email: existingUser.email },
-      process.env.JWT_SECRET || "your_jwt_secret_key",
-      { expiresIn: '1h'},
-    );
+    // const token: any = jwt.sign(
+    //   { userId: existingUser._id, email: existingUser.email },
+    //   process.env.JWT_SECRET || "your_jwt_secret_key",
+    //   { expiresIn: '1h'},
+    // );
 
-    res.status(200).json({ message: 'Login successful', token: token, user: { username: existingUser.username, email: existingUser.email } });
+    const accessToken: any = generateAccessToken({ userId: existingUser._id, email: existingUser.email });
+    const refreshToken: any = generateRefreshToken({ userId: existingUser._id, email: existingUser.email });
+
+    existingUser.refreshToken = refreshToken;
+    await existingUser.save();   // Ensure it is saved to the database
+
+    res.status(200).json({ message: 'Login successful', accessToken: accessToken, refreshToken: refreshToken, user: { username: existingUser.username, email: existingUser.email } });
   }
   catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
 }
 
-export { registerUser, loginUser }; 
+const refreshToken = async (req: Request, res: Response) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res.status(400).json({ message: 'Refresh token is required' });
+    }
+
+    const existingUser = await User.findOne({ refreshToken });
+    if (!existingUser) {
+      return res.status(403).json({ message: 'Invalid refresh token' });
+    }
+
+    try {
+      const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET || "your_refresh_token_secret_key") as { userId: string, email: string };
+      const newAccessToken = generateAccessToken({ userId: decoded.userId, email: decoded.email });
+      res.status(200).json({ accessToken: newAccessToken });
+    } catch (error) {
+      return res.status(403).json({ message: 'Invalid refresh token' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+export { registerUser, loginUser, refreshToken }; 
