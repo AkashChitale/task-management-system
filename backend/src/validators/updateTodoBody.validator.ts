@@ -10,7 +10,7 @@ export const updateTodoBodySchema = z.object({
       (date) => {
         if (!date) return true;
         const parsed = new Date(date);
-        return !isNaN(parsed.getTime()) && parsed > new Date();
+        return !isNaN(parsed.getTime()) && parsed > new Date(); 
       },
       { message: "Due dates must be in the future" }
     )
