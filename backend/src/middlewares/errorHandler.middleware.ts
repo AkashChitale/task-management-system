@@ -5,6 +5,8 @@ export const errorHandler = (err : any, req: Request, res: Response, next: NextF
   let statusCode = 500;
   let message = "Internally Server Error";
 
+  console.error(err);
+
   if (err instanceof ZodError) {
     statusCode = 400;
     message = err.issues[0].message; // Get the first error message from Zod validation errors;
