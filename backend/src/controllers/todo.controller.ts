@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { AuthRequest } from "../middlewares/auth.middleware.js";
 import Todo from "../models/todo.model.js";
 import mongoose from "mongoose";
 
-const getTodos = async (req: AuthRequest, res: Response) => {
+const getTodos = async (req: AuthRequest, res: Response, next: NextFunction) => {
   // res.send('List of todos');
   try{
-    const userId = req.userId // Assuming req.user is set by auth middleware
+    const userId = req.userId!; // Assuming req.user is set by auth middleware (guaranteed by the auth middleware)
     const todos = await Todo.find({ userId });
     res.status(200).json(todos);
   } catch (error) {
@@ -14,33 +14,16 @@ const getTodos = async (req: AuthRequest, res: Response) => {
   }
 };
 
-const createTodo = async (req: AuthRequest, res: Response) => {
+const createTodo = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    const userId = req.userId; // Assuming req.user is set by auth middleware
-    if(!userId) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    const { title, description, dueDate } = req.body;
-    if(!title) {
-      return res.status(400).json({ message: "Title is required" });
-    }
-    if (dueDate){
-
-      const parsedDate = new Date(dueDate);
-
-      if (isNaN(parsedDate.getTime())) {
-        return res.status(400).json({ message: "Invalid due date format" });
-      }
-
-      if (parsedDate <= new Date()) {
-        return res.status(400).json({ message: "Due date must be in the future" });
-      }
-  }
-    const newTodo = new Todo({ title, description, dueDate, userId });
+    const userId = req.userId!; // Assuming req.user is set by auth middleware (guaranteed by the auth middleware)
+    
+    const newTodo = new Todo({ ...req.body, userId });
     await newTodo.save();
     res.status(201).json(newTodo);
   } catch (error) {
-    res.status(500).json({ message: "Failed to create todo", error });
+    next(error); // Pass the error to the error handling middleware
+    
   }
 };
 
@@ -74,7 +57,7 @@ const updateTodo = async (req: AuthRequest, res: Response) =>{
       return res.status(400).json({ message: "Todo ID is required" });
     }
     const { title, description, dueDate } = req.body;
-    res.status(200).json({ title, description, dueDate });
+    // res.status(200).json({ title, description, dueDate });
     if (dueDate){
       const parsedDate = new Date(dueDate);
       if (isNaN(parsedDate.getTime())) {
