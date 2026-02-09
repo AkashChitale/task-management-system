@@ -28,27 +28,26 @@ const createTodo = async (req: AuthRequest, res: Response, next: NextFunction) =
 };
 
 // delete (/:id) 
-const deleteTodo = async (req: AuthRequest, res: Response) => {
+const deleteTodo = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const userId = req.userId;
     const todoId = req.params.id as string;
-    if(!todoId || !mongoose.Types.ObjectId.isValid(todoId)) {
-      return res.status(400).json({ message: "Todo ID is required" });
-    }
-    const todo = await Todo.findOne({ _id: todoId, userId }); 
 
+
+    const todo = await Todo.findOne({ _id: todoId, userId }); 
     if (!todo) {
       return res.status(404).json({ message: "Todo not found" });
     }
+    
     await Todo.deleteOne({ _id: todoId, userId });
 
     res.status(200).json({ message: "Todo deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Failed to delete todo", error });
+    next(error);
   }
 };
 
-// update (/:id)
+// update (/:id) 
 const updateTodo = async (req: AuthRequest, res: Response, next: NextFunction) =>{
   try {
     const userId = req.userId;
