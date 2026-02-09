@@ -1,18 +1,14 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import User, { IUser } from '../models/user.model.js'; 
 import jwt from 'jsonwebtoken';
 import { generateAccessToken, generateRefreshToken } from '../utils/token.js';
 
 
-const registerUser = async (req: Request, res: Response) => {
+const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   // res.send('User registration endpoint');
 
   try{
     const { username, password, email } = req.body;
-
-    if(!username || !password || !email) {
-      return res.status(400).json({ message: 'All fields are required' });
-    }
 
     // find existing user
     const existingUser = await User.findOne({ email }); // here User is a mongoose model;
@@ -27,17 +23,13 @@ const registerUser = async (req: Request, res: Response) => {
 
   } 
   catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    next(error);
   }
 };
 
-const loginUser = async (req: Request, res: Response) => {
+const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try{
     const { email, password } = req.body;
-
-    if(!email || !password) {
-      return res.status(400).json({ message: 'All fields are required' });
-    }
 
     // find existing user
     const existingUser = await User.findOne({ email }); 
@@ -66,11 +58,11 @@ const loginUser = async (req: Request, res: Response) => {
     res.status(200).json({ message: 'Login successful', accessToken: accessToken, refreshToken: refreshToken, user: { username: existingUser.username, email: existingUser.email } });
   }
   catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    next(error);
   }
-}
+};
 
-const refreshToken = async (req: Request, res: Response) => {
+const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { refreshToken } = req.body;
 
@@ -91,7 +83,7 @@ const refreshToken = async (req: Request, res: Response) => {
       return res.status(403).json({ message: 'Invalid refresh token' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    next(error);
   }
 };
 
