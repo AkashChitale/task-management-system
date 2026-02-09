@@ -5,7 +5,7 @@ import { validate } from "../middlewares/validate.middleware.js";
 import { createTodoSchema } from "../validators/todo.validator.js";
 import { updateTodoParamsSchema } from "../validators/updateTodoParams.validator.js";
 import { updateTodoBodySchema } from "../validators/updateTodoBody.validator.js";
-
+import { deleteTodoParamsSchema } from "../validators/deleteTodoParams.validator.js";
 
 const TodoRouter = Router();
 
@@ -13,7 +13,7 @@ TodoRouter.get("/", authMiddleware, getTodos);
 
 TodoRouter.post("/create", authMiddleware, validate(createTodoSchema), createTodo);
 
-TodoRouter.delete("/:id", authMiddleware, deleteTodo);
+TodoRouter.delete("/:id", authMiddleware, validate(deleteTodoParamsSchema, "params"), deleteTodo);
 
 TodoRouter.put("/:id", authMiddleware, validate(updateTodoParamsSchema, "params"), validate(updateTodoBodySchema), updateTodo);
  
