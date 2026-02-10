@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "NODE_OPTIONS=--loader=ts-node/esm node --no-warnings=ExperimentalWarning src/index.ts"
+    "dev": "NODE_OPTIONS=--loader=ts-node/esm node --no-warnings=ExperimentalWarning src/index.ts",
+    "worker": "ts-node-esm src/workers/reminder.worker.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,8 +16,10 @@
     "@types/express": "^5.0.6",
     "@types/node": "^25.2.0",
     "bcrypt": "^6.0.0",
+    "bull": "^4.16.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "ioredis": "^5.9.2",
     "mongoose": "^9.1.5",
     "typescript": "^5.9.3",
     "zod": "^4.3.6"

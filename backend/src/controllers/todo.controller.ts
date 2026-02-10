@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { AuthRequest } from "../middlewares/auth.middleware.js";
 import Todo from "../models/todo.model.js";
 import mongoose from "mongoose";
+import { reminderQueue } from "../queues/reminder.queue.js";
+import User from "../models/user.model.js";
 
 const getTodos = async (req: AuthRequest, res: Response, next: NextFunction) => {
   // res.send('List of todos');
@@ -17,9 +19,28 @@ const getTodos = async (req: AuthRequest, res: Response, next: NextFunction) => 
 const createTodo = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const userId = req.userId!; // Assuming req.user is set by auth middleware (guaranteed by the auth middleware)
-    
+    const user = await User.findById(userId);
     const newTodo = new Todo({ ...req.body, userId });
     await newTodo.save();
+    if(req.body.dueDate) {
+      // const delay = new Date(req.body.dueDate).getTime() - Date.now();
+      console.log("Scheduling reminder for todo:", newTodo.title, "at", req.body.dueDate);
+      const delay = 5000; // 5 seconds for testing purpose
+
+      if (delay > 0) {
+        await reminderQueue.add(
+          "todo-reminder",
+          {
+            email: user!.email,
+            title: newTodo.title,
+            todoId: newTodo._id.toString()
+          },
+          {
+            delay
+          }
+        );
+      }
+    }
     res.status(201).json(newTodo);
   } catch (error) {
     next(error); // Pass the error to the error handling middleware
