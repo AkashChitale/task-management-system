@@ -9,8 +9,8 @@ const getTodos = async (req: AuthRequest, res: Response, next: NextFunction) => 
   // res.send('List of todos');
   try{
     const userId = req.userId!; // Assuming req.user is set by auth middleware (guaranteed by the auth middleware)
-    const pages = parseInt(req.query.pages as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 5;
+    const pages = parseInt((req as any).validatedQuery?.page) || 1;
+    const limit = parseInt((req as any).validatedQuery?.limit) || 5;
     const skip = (pages - 1) * limit;
 
     const todos = await Todo.find({ userId })

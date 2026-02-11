@@ -6,10 +6,11 @@ import { createTodoSchema } from "../validators/todo.validator.js";
 import { updateTodoParamsSchema } from "../validators/updateTodoParams.validator.js";
 import { updateTodoBodySchema } from "../validators/updateTodoBody.validator.js";
 import { deleteTodoParamsSchema } from "../validators/deleteTodoParams.validator.js";
+import { getTodosQuerySchema } from "../validators/getTodosQuery.validator.js";
 
 const TodoRouter = Router();
 
-TodoRouter.get("/", authMiddleware, getTodos);
+TodoRouter.get("/", authMiddleware, validate(getTodosQuerySchema, "query"), getTodos);
 
 TodoRouter.post("/create", authMiddleware, validate(createTodoSchema), createTodo);
 

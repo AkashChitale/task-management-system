@@ -9,7 +9,12 @@ export const validate =
   (schema: z.ZodSchema, target: validateTarget = "body") =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
-      req[target] = schema.parse(req[target]);
+      const parsed = schema.parse(req[target]);
+
+      if (target === "body") req.body = parsed;
+      if (target === "query") (req as any).validatedQuery = parsed;
+      if (target === "params") req.params = parsed as any;
+
       next();
     } catch (err) {
       next(err);
