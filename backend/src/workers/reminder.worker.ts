@@ -1,4 +1,6 @@
+// @ts-ignore
 import { reminderQueue } from "../queues/reminder.queue.ts";
+// @ts-ignore
 import { sendEmail } from "../services/email.service.ts";
 
 console.log("Reminder worker started...");

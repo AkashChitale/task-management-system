@@ -9,8 +9,18 @@ const getTodos = async (req: AuthRequest, res: Response, next: NextFunction) => 
   // res.send('List of todos');
   try{
     const userId = req.userId!; // Assuming req.user is set by auth middleware (guaranteed by the auth middleware)
-    const todos = await Todo.find({ userId });
-    res.status(200).json(todos);
+    const pages = parseInt(req.query.pages as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 5;
+    const skip = (pages - 1) * limit;
+
+    const todos = await Todo.find({ userId })
+    .skip(skip)
+    .limit(limit)
+    .sort({ createdAt: -1 }); // Sort by creation date, newest first
+
+    const total = await Todo.countDocuments({ userId });
+
+    res.status(200).json({pages, limit, total, todos });
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch todos", error });
   }
