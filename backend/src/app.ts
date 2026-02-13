@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import UserRouter from './routes/user.route.js';
 import TodoRouter from './routes/todo.route.js';
-import { errorHandler } from './middlewares/errorHandler.middleware.js';
+import { errorHandler } from './middlewares/error.middleware.js';
 
 dotenv.config();
 
