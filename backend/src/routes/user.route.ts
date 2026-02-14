@@ -3,6 +3,7 @@ import { registerUser, loginUser, refreshToken } from '../controllers/user.contr
 import { validate } from '../middlewares/validate.middleware.js';
 import { registerUserBodySchema } from '../validators/registerUser.validator.js';
 import { loginUserBodySchema } from '../validators/loginUser.validator.js';
+import { authMiddleware } from '../middlewares/auth.middleware.js';
 
 const UserRouter: Router = Router();
 
@@ -10,6 +11,6 @@ UserRouter.post('/register', validate(registerUserBodySchema), registerUser);
 
 UserRouter.post('/login', validate(loginUserBodySchema), loginUser);
 
-UserRouter.post('/refresh-token', refreshToken);
+UserRouter.post('/refresh-token', authMiddleware, refreshToken);
 
 export default UserRouter;

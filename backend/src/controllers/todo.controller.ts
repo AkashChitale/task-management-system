@@ -4,10 +4,12 @@ import Todo from "../models/todo.model.js";
 import mongoose from "mongoose";
 import { reminderQueue } from "../queues/reminder.queue.js";
 import User from "../models/user.model.js";
+import { asyncHandler } from "../middlewares/asyncHandler.middleware.js";
+import { AppError } from "../errors/AppError.js";
 
-const getTodos = async (req: AuthRequest, res: Response, next: NextFunction) => {
-  // res.send('List of todos');
-  try{
+const getTodos = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
+    // res.send('List of todos');
+
     const userId = req.userId!; // Assuming req.user is set by auth middleware (guaranteed by the auth middleware)
     const pages = parseInt((req as any).validatedQuery?.page) || 1;
     const limit = parseInt((req as any).validatedQuery?.limit) || 5;
@@ -21,13 +23,9 @@ const getTodos = async (req: AuthRequest, res: Response, next: NextFunction) => 
     const total = await Todo.countDocuments({ userId });
 
     res.status(200).json({pages, limit, total, todos });
-  } catch (error) {
-    res.status(500).json({ message: "Failed to fetch todos", error });
-  }
-};
+});
 
-const createTodo = async (req: AuthRequest, res: Response, next: NextFunction) => {
-  try {
+const createTodo = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
     const userId = req.userId!; // Assuming req.user is set by auth middleware (guaranteed by the auth middleware)
     const user = await User.findById(userId);
     const newTodo = new Todo({ ...req.body, userId });
@@ -52,45 +50,37 @@ const createTodo = async (req: AuthRequest, res: Response, next: NextFunction) =
       }
     }
     res.status(201).json(newTodo);
-  } catch (error) {
-    next(error); // Pass the error to the error handling middleware
-    
-  }
-};
+});
 
 // delete (/:id) 
-const deleteTodo = async (req: AuthRequest, res: Response, next: NextFunction) => {
-  try {
+const deleteTodo = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
     const userId = req.userId;
     const todoId = req.params.id as string;
 
 
     const todo = await Todo.findOne({ _id: todoId, userId }); 
     if (!todo) {
-      return res.status(404).json({ message: "Todo not found" });
+      throw new AppError("Todo not found", 404);
     }
     
     await Todo.deleteOne({ _id: todoId, userId });
 
     res.status(200).json({ message: "Todo deleted successfully" });
-  } catch (error) {
-    next(error);
-  }
-};
+ 
+});
 
 // update (/:id) 
-const updateTodo = async (req: AuthRequest, res: Response, next: NextFunction) =>{
-  try {
+const updateTodo = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
     const userId = req.userId;
     const todoId = req.params.id as string;
     if(!mongoose.Types.ObjectId.isValid(todoId)) {
-      return res.status(400).json({ message: "Todo ID is required" });
+      throw new AppError("Todo ID is invalid", 400);
     }
     
     const todo = await Todo.findOne({ _id: todoId, userId }); 
 
     if (!todo) {
-      return res.status(404).json({ message: "Todo not found" });
+      throw new AppError("Todo not found", 404);
     }
 
     const { title, description, dueDate } = req.body;
@@ -100,9 +90,6 @@ const updateTodo = async (req: AuthRequest, res: Response, next: NextFunction) =
     if(dueDate !== undefined) todo.dueDate = dueDate;
     await todo.save();  // Save the updated todo
     res.status(200).json(todo);
-} catch (error) {
-    next(error); 
-  }
-};
+});
 
 export { getTodos, createTodo, deleteTodo, updateTodo };

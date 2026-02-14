@@ -11,6 +11,8 @@ export const errorHandler = (
   let statusCode = 500;
   let message = "Internal Server Error";
 
+  console.error("Error:", err);
+
   if (err instanceof ZodError) {
     statusCode = 400;
     // Extract the first issue message or provide a default

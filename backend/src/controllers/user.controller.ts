@@ -2,44 +2,39 @@ import { Request, Response, NextFunction } from 'express';
 import User, { IUser } from '../models/user.model.js'; 
 import jwt from 'jsonwebtoken';
 import { generateAccessToken, generateRefreshToken } from '../utils/token.js';
+import { AppError } from '../errors/AppError.js';
+import { asyncHandler } from '../middlewares/asyncHandler.middleware.js';
 
-
-const registerUser = async (req: Request, res: Response, next: NextFunction) => {
+const registerUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   // res.send('User registration endpoint');
 
-  try{
     const { username, password, email } = req.body;
 
     // find existing user
     const existingUser = await User.findOne({ email }); // here User is a mongoose model;
-    const exitstngUsername = await User.findOne({ username });
-    if(existingUser || exitstngUsername) {
-      return res.status(409).json({ message: 'User already exists' });
+    const existingUsername = await User.findOne({ username });
+    if(existingUser || existingUsername) {
+      throw new AppError("User already exists", 409);
     }
     const newUser = new User({ username, password, email });
     await newUser.save();
     
     res.status(201).json({ message: 'User registered successfully' });
 
-  } 
-  catch (error) {
-    next(error);
-  }
-};
+});
 
-const loginUser = async (req: Request, res: Response, next: NextFunction) => {
-  try{
+const loginUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
 
     // find existing user
     const existingUser = await User.findOne({ email }); 
     if(!existingUser) {
-      return res.status(404).json({ message: 'User not found' });
+      throw new AppError("User not found", 404);
     }
     
     const isPasswordValid = await existingUser.comparePassword(password);   
     if(!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      throw new AppError("Invalid credentials", 401);
     }
 
     //Generate JWT token
@@ -56,35 +51,30 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     await existingUser.save();   // Ensure it is saved to the database
 
     res.status(200).json({ message: 'Login successful', accessToken: accessToken, refreshToken: refreshToken, user: { username: existingUser.username, email: existingUser.email } });
-  }
-  catch (error) {
-    next(error);
-  }
-};
+ 
+});
 
-const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
-  try {
+const refreshToken = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+
     const { refreshToken } = req.body;
 
     if (!refreshToken) {
-      return res.status(400).json({ message: 'Refresh token is required' });
+      throw new AppError("Refresh token is required", 400);
     }
 
     const existingUser = await User.findOne({ refreshToken });
     if (!existingUser) {
-      return res.status(403).json({ message: 'Invalid refresh token' });
+      throw new AppError("Invalid or expired refresh token", 403);
     }
 
     try {
       const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET || "your_refresh_token_secret_key") as { userId: string, email: string };
       const newAccessToken = generateAccessToken({ userId: decoded.userId, email: decoded.email });
-      res.status(200).json({ accessToken: newAccessToken });
+      res.status(200).json({ success: true, accessToken: newAccessToken });
     } catch (error) {
-      return res.status(403).json({ message: 'Invalid refresh token' });
+      throw new AppError("Invalid refresh token", 403);
     }
-  } catch (error) {
-    next(error);
-  }
-};
+ 
+});
 
 export { registerUser, loginUser, refreshToken }; 
