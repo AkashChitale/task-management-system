@@ -10,4 +10,14 @@ export default defineConfig({
       },
     }),
   ],
-})
+  server: {
+    proxy: {
+      '/': {
+        target: 'http://localhost:3300',
+        changeOrigin: true,
+        secure: false,
+      },
+    },    
+
+  }
+});
