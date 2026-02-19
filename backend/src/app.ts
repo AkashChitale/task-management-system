@@ -15,13 +15,13 @@ const PORT: number = parseInt(process.env.PORT || "3000", 10);
 
 app.use(express.json());
 
-app.get('/', (req: Request, res: Response) => {
+app.get('/api', (req: Request, res: Response) => {
   res.send('Welcome to the Todo API');
 });
 
 app.use('/api/users', UserRouter);
 
-app.use('/todos', TodoRouter);
+app.use('/api/todos', TodoRouter);
 
 app.use(errorHandler);
 
