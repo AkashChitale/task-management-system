@@ -1,17 +1,15 @@
-import { useState, useEffect } from "react";
-import { fetchTodos } from "../api/todos.api";
+import { useTodos } from "../hooks/useTodos";
 import type { Todo } from "../types/todo";
 import TodoItem from "./TodoItem";
 
+
 function TodoList() {
 
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const { todos, loading, error } = useTodos();
 
-  useEffect(() => {
-    fetchTodos()
-    .then(setTodos)
-    .catch(console.error);
-  }, []);
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
 
   return (
     <div>
