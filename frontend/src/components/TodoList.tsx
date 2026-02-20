@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { fetchTodos } from "../api/todos.api";
 import type { Todo } from "../types/todo";
+import TodoItem from "./TodoItem";
 
 function TodoList() {
 
@@ -16,9 +17,9 @@ function TodoList() {
     <div>
       <h2>Todo List</h2>
       <ul>
-        {todos.map((todo: any) => (
-          <li key={todo._id}>{todo.title}</li>
-        ))}
+        {todos.map((todo: Todo) => (
+          <TodoItem key={todo._id} todo={todo} />
+        )) }
       </ul>
     </div>
   );
