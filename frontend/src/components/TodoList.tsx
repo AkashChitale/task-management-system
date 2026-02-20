@@ -1,15 +1,8 @@
-import { useTodos } from "../hooks/useTodos";
 import type { Todo } from "../types/todo";
 import TodoItem from "./TodoItem";
 
 
-function TodoList() {
-
-  const { todos, loading, error } = useTodos();
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
-
+function TodoList({ todos }: { todos: Todo[] }) {
 
   return (
     <div>
