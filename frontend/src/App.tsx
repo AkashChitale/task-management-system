@@ -1,6 +1,5 @@
 import AppRoutes from "./routes/AppRoutes";
 
-
 import "./App.css";
 
 // axiosInstance.get("/").then(res => console.log("Hello from the backend!", res.data)).catch(console.error );
