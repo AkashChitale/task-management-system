@@ -21,9 +21,13 @@ const authMiddleware = asyncHandler(async (req: AuthRequest, res: Response, next
     }
 
     const secret = process.env.ACCESS_TOKEN_SECRET! || "your_access_token_secret_key";
-    const decoded = jwt.verify(token, secret) as { userId: string };
-    // res.send(decoded.userId);
-    req.userId = decoded.userId;
+    try {
+        const decoded = jwt.verify(token, secret) as { userId: string };
+        req.userId = decoded.userId;
+    } catch (err) {
+        throw new AppError("Invalid token", 401);
+    }
+    
 
     const user = await User.findById(req.userId);
     if (!user) {

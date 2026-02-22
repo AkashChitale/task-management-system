@@ -8,9 +8,7 @@ const axiosInstance: AxiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-        const token = localStorage.getItem('token');
-        // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTgzNGU0ODE1MTliYWJmMWU4ZjMyOTciLCJlbWFpbCI6ImFrYXNoMUBnbWFpbC5jb20iLCJpYXQiOjE3NzE1MTA5NDUsImV4cCI6MTc3MTU5NzM0NX0.vEJJJ1d9rmuDVNLrtA7CMx9r4H1suvspRn2_gix6m-8"
-        
+        const token = localStorage.getItem('authToken');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
@@ -22,4 +20,15 @@ axiosInstance.interceptors.request.use(
     }
 )
 
+axiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('authUser');
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
 export default axiosInstance;
