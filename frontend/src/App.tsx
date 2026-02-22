@@ -1,4 +1,5 @@
 import AppRoutes from "./routes/AppRoutes";
+import Navbar from "./components/Navbar";
 
 import "./App.css";
 
@@ -8,7 +9,7 @@ function App() {
 
   return (
     <>
-      <h1 style={{textAlign: "center"}}>To Do Manager</h1>
+      <Navbar />
       <AppRoutes />
     </>
   )
