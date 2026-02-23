@@ -7,7 +7,7 @@ export default function Navbar() {
         <nav style={{ padding: "12px", borderBottom: "1px solid #ddd" }}>
         {isAuthenticated ? (
             <>
-            <span>Welcome, {user?.name}</span>
+            <span>Welcome, {user?.username}</span>
             <button onClick={logout} style={{ marginLeft: "12px" }}>
                 Logout
             </button>

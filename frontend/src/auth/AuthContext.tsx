@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import type { AuthContextType, User } from "./types";
+import { getCurrentUser } from "../api/auth.api";
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -26,14 +27,30 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
     };
 
     useEffect(() => {
+        const validateAuth = async () => {
         const token = localStorage.getItem("accessToken");
-        const storedUser = localStorage.getItem("authUser");
-        if (token && storedUser) {
-            setUser(JSON.parse(storedUser));
+
+        if (!token) {
+            setIsLoading(false);
+            return;
+        }
+
+        try {
+            const user = await getCurrentUser(); // NOTE: .. from /users/me user email, username only returned, not accessToken and refreshToken.
+            setUser(user);
             setIsAuthenticated(true);
             setToken(token);
+            console.log("User authenticated from backend:", user);
+        } catch (error) {
+            // token invalid / expired
+            console.log("Token Expired or may be invalid");
+            logout();
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
+    };
+
+    validateAuth();
     }, []);
 
     return (

@@ -18,3 +18,9 @@ export const loginRequest = async (payload: loginPayload): Promise<loginResponse
     const response = await axiosInstance.post("/users/login", payload);
     return response.data;
 }
+
+
+export const getCurrentUser = async () => {
+  const response = await axiosInstance.get("/users/me");
+  return response.data.user;
+};
