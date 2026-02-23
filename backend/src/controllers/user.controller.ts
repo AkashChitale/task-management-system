@@ -4,8 +4,9 @@ import jwt from 'jsonwebtoken';
 import { generateAccessToken, generateRefreshToken } from '../utils/token.js';
 import { AppError } from '../errors/AppError.js';
 import { asyncHandler } from '../middlewares/asyncHandler.middleware.js';
+import { AuthRequest } from '../middlewares/auth.middleware.js';
 
-const registerUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+const registerUser = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
   // res.send('User registration endpoint');
 
     const { username, password, email } = req.body;
@@ -23,7 +24,7 @@ const registerUser = asyncHandler(async (req: Request, res: Response, next: Next
 
 });
 
-const loginUser = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+const loginUser = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
 
     // find existing user
@@ -54,7 +55,7 @@ const loginUser = asyncHandler(async (req: Request, res: Response, next: NextFun
  
 });
 
-const refreshToken = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+const refreshToken = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
 
     const { refreshToken } = req.body;
 
@@ -77,4 +78,12 @@ const refreshToken = asyncHandler(async (req: Request, res: Response, next: Next
  
 });
 
-export { registerUser, loginUser, refreshToken }; 
+const getMe = asyncHandler(async (req: AuthRequest, res: Response) => {
+    const userId = req.userId!;
+    const validatedUser = await User.findById(userId).select("-password");
+    if (!validatedUser) {
+        return res.status(404).json({ message: "User not found" });
+    }
+    res.json({ user: validatedUser });
+})
+export { registerUser, loginUser, refreshToken, getMe }; 
