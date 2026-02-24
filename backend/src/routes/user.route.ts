@@ -11,7 +11,7 @@ UserRouter.post('/register', validate(registerUserBodySchema), registerUser);
 
 UserRouter.post('/login', validate(loginUserBodySchema), loginUser);
 
-UserRouter.post('/refresh-token', authMiddleware, refreshToken);
+UserRouter.post('/refresh-token', refreshToken);
 
 UserRouter.get('/me', authMiddleware, getMe);
 
