@@ -50,6 +50,11 @@ const loginUser = asyncHandler(async (req: AuthRequest, res: Response, next: Nex
 
     existingUser.refreshToken = refreshToken;
     await existingUser.save();   // Ensure it is saved to the database
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,        // true in prod
+      sameSite: "strict",
+    });
 
     res.status(200).json({ message: 'Login successful', accessToken: accessToken, refreshToken: refreshToken, user: { username: existingUser.username, email: existingUser.email } });
  
@@ -57,7 +62,7 @@ const loginUser = asyncHandler(async (req: AuthRequest, res: Response, next: Nex
 
 const refreshToken = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
 
-    const { refreshToken } = req.body;
+    const { refreshToken } = req.cookies.refreshToken ? req.cookies : {};
 
     if (!refreshToken) {
       throw new AppError("Refresh token is required", 400);
