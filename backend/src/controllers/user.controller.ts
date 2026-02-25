@@ -63,7 +63,7 @@ const loginUser = asyncHandler(async (req: AuthRequest, res: Response, next: Nex
 const refreshToken = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 
     const { refreshToken } = req.cookies.refreshToken ? req.cookies : {};
-
+    console.log("Received refresh token:", refreshToken);
     if (!refreshToken) {
       throw new AppError("Refresh token is required", 400);
     }

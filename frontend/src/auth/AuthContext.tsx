@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
         } finally {
             setIsLoading(false);
         }
-    };
+    };  
 
     validateAuth();
     }, []);
