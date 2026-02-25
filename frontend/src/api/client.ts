@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { AxiosInstance,  InternalAxiosRequestConfig } from 'axios'
+import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios'
 
 const axiosInstance: AxiosInstance = axios.create({
     baseURL: "/api",
@@ -15,20 +15,77 @@ axiosInstance.interceptors.request.use(
 
         return config;  //otherwise site will hang
     },
-    (error) => {        
+    (error) => {
         return Promise.reject(error);
     }
 )
 
-axiosInstance.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        if (error.response && error.response.status === 401) {
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('authUser');
-            window.location.href = '/login';  //this is a property of the global window object that can be used to redirect the user to a different URL. By setting window.location.href to '/login', we are instructing the browser to navigate to the login page.
+
+// -------Response Interceptor-------
+
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+    failedQueue.forEach(promise => {
+        if (error) {
+            promise.reject(error);
+        } else {
+            promise.resolve(token);
         }
-        return Promise.reject(error); // this is important to propagate the error to the calling code, allowing it to handle the error appropriately (e.g., showing an error message to the user). If we don't return Promise.reject(error), the calling code will not receive the error and may assume that the request was successful, leading to potential issues in error handling.
+    })
+    failedQueue = [];
+}
+
+axiosInstance.interceptors.response.use(
+    response => response,
+    async (error) => {
+        const originalRequest = error.config;
+
+        // Token expired
+        console.log("Response interceptor triggered for error:", error);
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+
+            if (isRefreshing) {
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({ resolve, reject });
+                }).then((token) => {
+                    originalRequest.headers.Authorization = `Bearer ${token}`;
+                    return axiosInstance(originalRequest);
+                });
+            }
+
+            isRefreshing = true;
+
+            try {
+                const res = await axiosInstance.post(
+                    "/users/refresh-token",
+                    {},
+                    { withCredentials: true }
+                );
+
+                const newAccessToken = res.data.accessToken;
+                localStorage.setItem("accessToken", newAccessToken);
+
+                processQueue(null, newAccessToken);
+
+                originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                return axiosInstance(originalRequest);
+            } catch (err) {
+                processQueue(err, null);
+                // localStorage.clear();
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("authUser");
+                window.location.href = "/login";
+                return Promise.reject(err);
+            } finally {
+                isRefreshing = false;
+            }
+        }
+
+        return Promise.reject(error);
     }
 );
+
 export default axiosInstance;

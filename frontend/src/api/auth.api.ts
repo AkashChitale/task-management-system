@@ -1,4 +1,5 @@
 import axiosInstance from "./client";
+import { getAccessToken, setAccessToken, removeAccessToken } from "../utils/token";
 
 type loginPayload = {
     email: string;
@@ -24,3 +25,16 @@ export const getCurrentUser = async () => {
   const response = await axiosInstance.get("/users/me");
   return response.data.user;
 };
+
+export const refreshAccessToken = async () => {
+    try {
+        const response = await axiosInstance.post("/users/refresh-token");
+        const { accessToken } = response.data;
+        setAccessToken(accessToken);
+        return accessToken;
+    } catch (error) {
+        removeAccessToken();
+        throw error;
+    }
+}
+

@@ -25,7 +25,7 @@ const authMiddleware = asyncHandler(async (req: AuthRequest, res: Response, next
         const decoded = jwt.verify(token, secret) as { userId: string };
         req.userId = decoded.userId;
     } catch (err) {
-        throw new AppError("Invalid token", 401);
+        throw new AppError("Invalid token from auth", 401);
     }
     
 

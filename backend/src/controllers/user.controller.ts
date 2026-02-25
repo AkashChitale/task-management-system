@@ -52,7 +52,7 @@ const loginUser = asyncHandler(async (req: AuthRequest, res: Response, next: Nex
     await existingUser.save();   // Ensure it is saved to the database
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true,        // true in prod
+      secure: false,       // false for localhost, true in prod
       sameSite: "strict",
     });
 
@@ -60,7 +60,7 @@ const loginUser = asyncHandler(async (req: AuthRequest, res: Response, next: Nex
  
 });
 
-const refreshToken = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
+const refreshToken = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
 
     const { refreshToken } = req.cookies.refreshToken ? req.cookies : {};
 
@@ -72,7 +72,7 @@ const refreshToken = asyncHandler(async (req: AuthRequest, res: Response, next: 
     if (!existingUser) {
       throw new AppError("Invalid or expired refresh token", 403);
     }
-
+    console.log("=>Refresh token found for user:", existingUser.email);
     try {
       const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET || "your_refresh_token_secret_key") as { userId: string, email: string };
       const newAccessToken = generateAccessToken({ userId: decoded.userId, email: decoded.email });
