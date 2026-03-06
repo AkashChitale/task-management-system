@@ -8,10 +8,10 @@ function TodosPage() {
 
     if (loading) return <TodoSkeleton />;
     if (error) return (
-        <>
+        <div>
             <p>Error: {error}</p>
-            <button onClick={retry}>Retry</button>  // retry is only plain js function it directly cannot re-run hook
-        </>
+            <button onClick={retry}>Retry</button>
+        </div>
     );
 
     if(todos.length === 0) {

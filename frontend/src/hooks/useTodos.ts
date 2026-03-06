@@ -8,22 +8,32 @@ export function useTodos() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadTodos = useCallback(async (): Promise<void> => {
+  const loadTodos = useCallback(async (signal?: AbortSignal): Promise<void> => {
     try {
         setError(null);
-        setLoading(true);        // ⚠️I missed writting both setState here before, when I click retry, it should change the state so that component will re-render
-        const data = await fetchTodos();
+        setLoading(true);
+        const data = await fetchTodos(signal);
         setTodos(data);
     } catch (error: unknown) {
-        setError((error as Error).message);
+        // Don't set error state if request was cancelled
+        if ((error as Error).name !== 'AbortError' && (error as Error).name !== 'CanceledError') {
+            setError((error as Error).message);
+        }
     } finally {
         setLoading(false);
       }
   }, []);
 
   useEffect(() => {
-    loadTodos();
+    const abortController = new AbortController();
+    
+    loadTodos(abortController.signal);
+    
+    return () => {
+        // Cancel request on unmount
+        abortController.abort();
+    };
   },[loadTodos]);
 
-  return { todos, loading, error, retry: loadTodos };
+  return { todos, loading, error, retry: () => loadTodos() };
 }

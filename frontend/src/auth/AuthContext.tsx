@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useRef } from "react";
 import type { AuthContextType, User } from "./types";
 import { getCurrentUser } from "../api/auth.api";
 
@@ -8,22 +8,30 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
     const [user, setUser] = useState<User | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [accessToken, setToken] = useState<string | null>(null);
+    const abortControllerRef = useRef<AbortController | null>(null);
 
     const login = (accessToken: string, user: User) => {
+        // Cancel any pending validation
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+        
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("authUser", JSON.stringify(user));
         setUser(user);
         setIsAuthenticated(true);
-        setToken(accessToken);
     };
 
     const logout = () => {
+        // Cancel any pending validation
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+        
         localStorage.removeItem("accessToken");
         localStorage.removeItem("authUser");
         setUser(null);
         setIsAuthenticated(false);
-        setToken(null);
     };
 
     useEffect(() => {
@@ -35,22 +43,31 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
             return;
         }
 
+        // Create new AbortController for this validation
+        abortControllerRef.current = new AbortController();
+
         try {
-            const user = await getCurrentUser(); // NOTE: .. from /users/me user email, username only returned, not accessToken and refreshToken.
+            const user = await getCurrentUser();
             setUser(user);
             setIsAuthenticated(true);
-            setToken(token);
-            console.log("User authenticated from backend:", user);
-        } catch (error) {
-            // token invalid / expired
-            console.log("Token Expired or may be invalid");
-            logout();
+        } catch (error: any) {
+            // Only handle non-aborted errors
+            if (error.name !== 'AbortError' && error.name !== 'CanceledError') {
+                logout();
+            }
         } finally {
             setIsLoading(false);
         }
     };  
 
     validateAuth();
+    
+    return () => {
+        // Cleanup: cancel validation on unmount
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+    };
     }, []);
 
     return (

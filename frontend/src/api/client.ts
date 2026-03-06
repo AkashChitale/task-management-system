@@ -43,7 +43,6 @@ axiosInstance.interceptors.response.use(
         const originalRequest = error.config;
 
         // Token expired
-        console.log("Response interceptor triggered for error:", error);
         if (error.response?.status === 401 && !originalRequest._retry &&  !originalRequest.url?.includes("/users/refresh-token")) {
             originalRequest._retry = true;
 

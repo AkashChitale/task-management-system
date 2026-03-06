@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginRequest } from "../api/auth.api";
 import { useAuth } from "../hooks/useAuth";
-import { FormEvent } from "react";
+import { getUserFriendlyError, isValidEmail, validatePassword } from "../utils/errorMessages";
 
 const LoginPage = () => {
   const { login } = useAuth();
@@ -18,12 +18,32 @@ const LoginPage = () => {
     setLoading(true);
     setError(null);
 
+    // Input validation
+    if (!email.trim() || !password.trim()) {
+      setError("Please fill in all fields");
+      setLoading(false);
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address");
+      setLoading(false);
+      return;
+    }
+
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.valid) {
+      setError(passwordValidation.message!);
+      setLoading(false);
+      return;
+    }
+
     try {
       const data = await loginRequest({ email, password });
       login(data.accessToken, data.user);
       navigate("/todos");
     } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed");
+      setError(getUserFriendlyError(err));
     } finally {
       setLoading(false);
     }
@@ -33,23 +53,31 @@ const LoginPage = () => {
     <form onSubmit={handleSubmit}>
       <h2>Login</h2>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p style={{ color: "red" }} role="alert">{error}</p>}
 
-
+      <label htmlFor="email">Email</label>
       <input
+        id="email"
+        type="email"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        required
+        aria-required="true"
       />
 
+      <label htmlFor="password">Password</label>
       <input
+        id="password"
         type="password"
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        required
+        aria-required="true"
       />
 
-      <button disabled={loading}>
+      <button disabled={loading} type="submit">
         {loading ? "Logging in..." : "Login"}
       </button>
     </form>
