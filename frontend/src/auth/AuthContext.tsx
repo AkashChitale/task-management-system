@@ -1,6 +1,8 @@
 import { createContext, useEffect, useState, useRef } from "react";
 import type { AuthContextType, User } from "./types";
 import { getCurrentUser } from "../api/auth.api";
+import { toast } from "sonner";
+import { getUserFriendlyError } from "../utils/errorMessages";
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -27,7 +29,7 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
         if (abortControllerRef.current) {
             abortControllerRef.current.abort();
         }
-        
+        console.log("Erasing DATA - Logging out user");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("authUser");
         setUser(null);
@@ -36,7 +38,7 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
 
     useEffect(() => {
         const validateAuth = async () => {
-        const token = localStorage.getItem("accessToken");
+        const token = localStorage.getItem("accessToken") || null;
 
         if (!token) {
             setIsLoading(false);
@@ -52,8 +54,12 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
             setIsAuthenticated(true);
         } catch (error: any) {
             // Only handle non-aborted errors
+            const freindlyMessage = getUserFriendlyError(error);
             if (error.name !== 'AbortError' && error.name !== 'CanceledError') {
-                logout();
+                if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                    logout();
+                }
+                toast.error(freindlyMessage);
             }
         } finally {
             setIsLoading(false);
