@@ -29,7 +29,6 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
         if (abortControllerRef.current) {
             abortControllerRef.current.abort();
         }
-        console.log("Erasing DATA - Logging out user");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("authUser");
         setUser(null);
@@ -49,17 +48,17 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
         abortControllerRef.current = new AbortController();
 
         try {
-            const user = await getCurrentUser();
+            const user = await getCurrentUser(abortControllerRef.current.signal);
             setUser(user);
             setIsAuthenticated(true);
         } catch (error: any) {
             // Only handle non-aborted errors
-            const freindlyMessage = getUserFriendlyError(error);
+            const friendlyMessage = getUserFriendlyError(error);
             if (error.name !== 'AbortError' && error.name !== 'CanceledError') {
                 if (error.response && (error.response.status === 401 || error.response.status === 403)) {
                     logout();
                 }
-                toast.error(freindlyMessage);
+                toast.error(friendlyMessage);
             }
         } finally {
             setIsLoading(false);

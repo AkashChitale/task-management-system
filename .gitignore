@@ -32,3 +32,6 @@ coverage/
 # Exclude any MongoDB specific files that might be generated locally
 data/db/*
 logs/*
+
+# Todo App specific
+TODO.md

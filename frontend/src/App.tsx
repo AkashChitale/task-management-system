@@ -12,8 +12,11 @@ function App() {
   return (
     <AuthProvider>
       <Toaster position="top-right" richColors/>
-      <Navbar />
-      <AppRoutes />
+      <div className="app-shell">
+        <Navbar />
+        <AppRoutes />
+      </div>
+      
     </AuthProvider>
   )
 }

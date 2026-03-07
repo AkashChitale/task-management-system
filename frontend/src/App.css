@@ -1,0 +1,57 @@
+:root {
+	--app-text: #1f2a44;
+	--app-border: #d4daea;
+	--app-surface: #ffffff;
+	--app-navbar-height: 64px;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+	min-height: 100%;
+	margin: 0;
+}
+
+body {
+	color: var(--app-text);
+	background: #f6f8fd;
+	font-family: "Segoe UI", "Noto Sans", sans-serif;
+}
+
+.app-shell {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.app-navbar {
+	min-height: var(--app-navbar-height);
+	padding: 12px 20px;
+	border-bottom: 1px solid var(--app-border);
+	background: var(--app-surface);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.app-navbar__welcome {
+	font-weight: 600;
+}
+
+.app-navbar__button {
+	border: 1px solid var(--app-border);
+	background: #f2f5ff;
+	color: #1f2a44;
+	border-radius: 999px;
+	padding: 8px 14px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.app-navbar__button:hover {
+	background: #e8edff;
+}

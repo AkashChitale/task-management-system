@@ -20,8 +20,8 @@ export const loginRequest = async (payload: loginPayload): Promise<loginResponse
 }
 
 
-export const getCurrentUser = async () => {
-  const response = await axiosInstance.get("/users/me");
+export const getCurrentUser = async (signal?: AbortSignal) => {
+    const response = await axiosInstance.get("/users/me", { signal });
   return response.data.user;
 };
 
