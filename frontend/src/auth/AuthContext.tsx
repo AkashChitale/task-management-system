@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: {children: React.ReactNode}) => {
         abortControllerRef.current = new AbortController();
 
         try {
-            const user = await getCurrentUser(abortControllerRef.current.signal);
+            const user = await getCurrentUser();
             setUser(user);
             setIsAuthenticated(true);
         } catch (error: any) {

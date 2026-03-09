@@ -4,6 +4,7 @@ import LoginPage from "../pages/LoginPage";
 import { ProtectedRoute } from "./ProtectedRoute";
 import ErrorBoundary from "../components/ErrorBoundary";
 import { useAuth } from "../hooks/useAuth";
+import RegisterPage from "../pages/RegisterPage";
 
 const HomeRedirect = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -38,6 +39,7 @@ const AppRoutes = () => {
           <Route path="/" element={<HomeRedirect />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/register" element={<RegisterPage />} />
         </Routes>
       </BrowserRouter>
     </ErrorBoundary>

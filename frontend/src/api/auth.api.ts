@@ -25,3 +25,11 @@ export const getCurrentUser = async (signal?: AbortSignal) => {
   return response.data.user;
 };
 
+export const registerRequest = async (data: {
+  name: string;
+  email: string;
+  password: string;
+}) => {
+  const response = await axiosInstance.post("/auth/register", data);
+  return response.data;
+};

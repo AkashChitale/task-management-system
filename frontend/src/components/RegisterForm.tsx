@@ -1,28 +1,32 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginRequest } from "../api/auth.api";
-import { useAuth } from "../hooks/useAuth";
+import { registerRequest } from "../api/auth.api";
 import { getUserFriendlyError, isValidEmail, validatePassword } from "../utils/errorMessages";
 import "./LoginForm.css";
 
-const LoginForm = () => {
-  const { login } = useAuth();
+const RegisterForm = () => {
   const navigate = useNavigate();
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
 
+    setError(null);
+    setLoading(true);
+
+    const normalizedName = name.trim();
     const normalizedEmail = email.trim().toLowerCase();
     const normalizedPassword = password.trim();
+    const normalizedConfirm = confirmPassword.trim();
 
-    if (!normalizedEmail || !normalizedPassword) {
+    if (!normalizedName || !normalizedEmail || !normalizedPassword || !normalizedConfirm) {
       setError("Please fill in all fields");
       setLoading(false);
       return;
@@ -42,14 +46,20 @@ const LoginForm = () => {
       return;
     }
 
+    if (normalizedPassword !== normalizedConfirm) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const data = await loginRequest({
+      await registerRequest({
+        name: normalizedName,
         email: normalizedEmail,
         password: normalizedPassword,
       });
 
-      login(data.accessToken, data.user);
-      navigate("/todos");
+      navigate("/login");
 
     } catch (err: any) {
       setError(getUserFriendlyError(err));
@@ -60,8 +70,8 @@ const LoginForm = () => {
 
   return (
     <div className="login-card">
-      <h1 className="login-title">Todo Manager</h1>
-      <p className="login-subtitle">Sign in to continue to your workspace</p>
+      <h1 className="login-title">Create Account</h1>
+      <p className="login-subtitle">Start organizing your tasks today</p>
 
       <form onSubmit={handleSubmit} noValidate>
 
@@ -70,6 +80,20 @@ const LoginForm = () => {
             {error}
           </p>
         )}
+
+        <label htmlFor="name">Full Name</label>
+
+        <input
+          id="name"
+          type="text"
+          name="name"
+          placeholder="Enter your full name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          autoComplete="name"
+          required
+          disabled={loading}
+        />
 
         <label htmlFor="email">Email</label>
 
@@ -91,23 +115,38 @@ const LoginForm = () => {
           id="password"
           type="password"
           name="password"
-          placeholder="Enter your password"
+          placeholder="Create a password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
+          autoComplete="new-password"
+          required
+          disabled={loading}
+        />
+
+        <label htmlFor="confirmPassword">Confirm Password</label>
+
+        <input
+          id="confirmPassword"
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirm your password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          autoComplete="new-password"
           required
           disabled={loading}
         />
 
         <button type="submit" disabled={loading} aria-busy={loading}>
-          {loading ? "Logging in..." : "Log in"}
+          {loading ? "Creating account..." : "Register"}
         </button>
       </form>
+
       <p className="auth-switch">
-        Don't have an account? <a href="/register">Register</a>
+        Already have an account? <a href="/login">Login</a>
       </p>
     </div>
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

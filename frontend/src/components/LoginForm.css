@@ -12,10 +12,9 @@
 
 .login-container {
   flex: 1;
-  min-height: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding: 24px;
   background:
     radial-gradient(circle at 20% 15%, rgba(74, 122, 255, 0.22), transparent 42%),
@@ -26,7 +25,7 @@
 .login-card {
   width: 100%;
   max-width: 420px;
-  padding: 28px;
+  padding: 28px 28px 16px;
   border-radius: 20px;
   border: 1px solid var(--login-border);
   background: color-mix(in oklab, var(--login-card-bg) 94%, #f8fbff 6%);
@@ -129,4 +128,15 @@
     padding: 20px;
     border-radius: 16px;
   }
+}
+
+.auth-switch{
+  margin-top:14px;
+  text-align:center;
+  font-size:0.9rem;
+}
+
+.auth-switch a{
+  color:var(--login-primary);
+  font-weight:600;
 }
