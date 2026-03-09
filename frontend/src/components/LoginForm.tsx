@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { loginRequest } from "../api/auth.api";
 import { useAuth } from "../hooks/useAuth";
 import { getUserFriendlyError, isValidEmail, validatePassword } from "../utils/errorMessages";
+import { Link } from "react-router-dom";
 import "./LoginForm.css";
 
 const LoginForm = () => {
@@ -104,7 +105,7 @@ const LoginForm = () => {
         </button>
       </form>
       <p className="auth-switch">
-        Don't have an account? <a href="/register">Register</a>
+        Don't have an account? <Link to="/register">Register</Link>
       </p>
     </div>
   );

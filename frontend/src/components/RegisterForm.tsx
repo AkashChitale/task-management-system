@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerRequest } from "../api/auth.api";
 import { getUserFriendlyError, isValidEmail, validatePassword } from "../utils/errorMessages";
+import { Link } from "react-router-dom";
 import "./LoginForm.css";
 
 const RegisterForm = () => {
@@ -143,7 +144,7 @@ const RegisterForm = () => {
       </form>
 
       <p className="auth-switch">
-        Already have an account? <a href="/login">Login</a>
+        Already have an account? <Link to="/login">Login</Link>
       </p>
     </div>
   );
