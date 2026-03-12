@@ -1,4 +1,5 @@
 import { useAuth } from "../hooks/useAuth";
+import "./Navbar.css";
 
 export default function Navbar() {
     const { user, isAuthenticated, logout } = useAuth();

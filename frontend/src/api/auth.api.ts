@@ -26,10 +26,10 @@ export const getCurrentUser = async (signal?: AbortSignal) => {
 };
 
 export const registerRequest = async (data: {
-  name: string;
+  username: string;
   email: string;
   password: string;
 }) => {
-  const response = await axiosInstance.post("/auth/register", data);
+  const response = await axiosInstance.post("/users/register", data);
   return response.data;
 };

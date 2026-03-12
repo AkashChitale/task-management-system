@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { registerRequest } from "../api/auth.api";
 import { getUserFriendlyError, isValidEmail, validatePassword } from "../utils/errorMessages";
 import { Link } from "react-router-dom";
-import "./LoginForm.css";
+import "./Auth.css";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ const RegisterForm = () => {
 
     try {
       await registerRequest({
-        name: normalizedName,
+        username: normalizedName,
         email: normalizedEmail,
         password: normalizedPassword,
       });
@@ -70,9 +70,9 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="login-card">
-      <h1 className="login-title">Create Account</h1>
-      <p className="login-subtitle">Start organizing your tasks today</p>
+    <div className="auth-card">
+      <h1 className="auth-title">Create Account</h1>
+      <p className="auth-subtitle">Start organizing your tasks today</p>
 
       <form onSubmit={handleSubmit} noValidate>
 

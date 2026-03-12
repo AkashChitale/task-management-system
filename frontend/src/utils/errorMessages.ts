@@ -15,7 +15,7 @@ export function getUserFriendlyError(error: any): string {
     case 400:
       return message || "Invalid request. Please check your input.";
     case 401:
-      return "Session expired. Please log in again.";
+      return "Invalid Credentials. Please check your email and password.";
     case 403:
       return "You don't have permission to perform this action.";
     case 404:

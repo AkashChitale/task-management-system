@@ -4,7 +4,7 @@ import { loginRequest } from "../api/auth.api";
 import { useAuth } from "../hooks/useAuth";
 import { getUserFriendlyError, isValidEmail, validatePassword } from "../utils/errorMessages";
 import { Link } from "react-router-dom";
-import "./LoginForm.css";
+import "./Auth.css";
 
 const LoginForm = () => {
   const { login } = useAuth();
@@ -60,9 +60,9 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="login-card">
-      <h1 className="login-title">Todo Manager</h1>
-      <p className="login-subtitle">Sign in to continue to your workspace</p>
+    <div className="auth-card">
+      <h1 className="auth-title">Todo Manager</h1>
+      <p className="auth-subtitle">Sign in to continue to your workspace</p>
 
       <form onSubmit={handleSubmit} noValidate>
 

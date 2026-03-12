@@ -1,0 +1,11 @@
+.auth-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(74, 122, 255, 0.22), transparent 42%),
+    radial-gradient(circle at 85% 80%, rgba(31, 111, 235, 0.18), transparent 45%),
+    linear-gradient(160deg, var(--auth-bg-1), var(--auth-bg-2));
+}
