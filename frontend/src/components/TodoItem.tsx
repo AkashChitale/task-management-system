@@ -1,14 +1,59 @@
 import type { Todo } from "../types/todo";
+import "./TodoItem.css";
 
-function TodoItem({ todo }: { todo: Todo }) {     // { todo : Todo } is the type annotation for the props object.
-    return (
-        <li>
-            <h3>{todo.title}</h3>
-            {todo.description && <p>{todo.description}</p>}
-            <p>Status: {todo.completed ? "Completed" : "Pending"}</p>
-            {todo.dueDate && <p>Due: {new Date(todo.dueDate).toLocaleDateString()}</p>}
-        </li>
-    );
+interface Props {
+  todo: Todo;
+  onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
 }
+
+const TodoItem = ({ todo, onToggle, onDelete }: Props) => {
+  return (
+    <div className="todo-item">
+
+      <input
+        type="checkbox"
+        checked={todo.completed}
+        onChange={() => onToggle(todo._id)}
+      />
+
+      <div className="todo-text">
+
+        <p className={`todo-title ${todo.completed ? "done" : ""}`}>
+          {todo.title}
+        </p>
+
+        {todo.description && (
+          <p className="todo-desc">{todo.description}</p>
+        )}
+
+        {todo.dueDate && (
+          <span className="todo-date">
+            Due {new Date(todo.dueDate).toLocaleDateString()}
+          </span>
+        )}
+
+      </div>
+
+      <button className="delete-btn" onClick={() => onDelete(todo._id)}>
+        <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+        >
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6l-2 14H7L5 6" />
+            <path d="M10 11v6" />
+            <path d="M14 11v6" />
+            <path d="M9 6V4h6v2" />
+        </svg>
+      </button>
+
+    </div>
+  );
+};
 
 export default TodoItem;

@@ -1,0 +1,94 @@
+.todo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.15s ease;
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+.todo-item:hover {
+  background: #fafafa;
+}
+
+.todo-checkbox {
+  margin-top: 3px;
+  cursor: pointer;
+}
+
+.todo-text {
+  flex: 1;
+}
+
+.todo-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #222;
+  margin: 0;
+}
+
+.todo-title.done {
+  text-decoration: line-through;
+  color: #9a9a9a;
+}
+
+.todo-desc {
+  font-size: 13px;
+  color: #666;
+  margin: 3px 0;
+}
+
+.todo-date {
+  font-size: 12px;
+  color: #999;
+}
+
+.delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 28px;
+  height: 28px;
+
+  border: none;
+  border-radius: 6px;
+
+  background: transparent;
+  color: #a0a0a0;
+
+  cursor: pointer;
+
+  opacity: 0;
+  transform: scale(0.9);
+
+  transition: 
+    opacity 0.15s ease,
+    transform 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+/* appear when hovering todo row */
+
+.todo-item:hover .delete-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* hover effect */
+
+.delete-btn:hover {
+  background: #f5f5f5;
+  color: #e54848;
+}
+
+/* click effect */
+
+.delete-btn:active {
+  transform: scale(0.92);
+}
