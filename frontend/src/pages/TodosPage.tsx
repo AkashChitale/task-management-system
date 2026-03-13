@@ -1,5 +1,6 @@
 import TodoList from "../components/TodoList";
 import TodoSkeleton from "../components/TodoSkeleton";
+import AddTodo from "../components/AddTodo";
 import { useTodos } from "../hooks/useTodos";
 import "./TodosPage.css";
 
@@ -13,6 +14,11 @@ const { todos, loading, error, retry } = useTodos();
   const deleteTodo = (id: string) => {
     console.log("delete", id);
   };
+
+  const addTodo = (todo: any) => {
+    console.log("add", todo);
+  };
+
 
   if (loading) return <TodoSkeleton />;
 
@@ -28,6 +34,8 @@ const { todos, loading, error, retry } = useTodos();
     <div className="todo-page">
 
       <h2>My Tasks</h2>
+
+      <AddTodo onAdd={addTodo} />
 
       <TodoList
         todos={todos}
