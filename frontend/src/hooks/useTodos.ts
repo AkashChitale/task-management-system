@@ -1,5 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import { fetchTodos } from "../api/todos.api";
+import { 
+    fetchTodos,
+    addTodoRequest,
+    deleteTodoRequest,
+    toggleTodoRequest 
+ } from "../api/todos.api";
 import type { Todo } from "../types/todo";
 
 export function useTodos() {
@@ -35,5 +40,38 @@ export function useTodos() {
     };
   },[loadTodos]);
 
-  return { todos, loading, error, retry: () => loadTodos() };
+  // ADD TODO
+  const addTodo = async (todoData: Omit<Todo, "_id" | "completed" | "createdAt">) => {
+    try {
+      const newTodo = await addTodoRequest(todoData);
+      setTodos(prev => [newTodo, ...prev]);
+    } catch (err) {
+      console.error("Add todo failed", err);
+    }
+  };
+
+  // DELETE TODO
+  const deleteTodo = async (id: string) => {
+    try {
+      await deleteTodoRequest(id);
+      setTodos(prev => prev.filter(todo => todo._id !== id));
+    } catch (err) {
+      console.error("Delete failed", err);
+    }
+  };
+
+  // TOGGLE TODO
+  const toggleTodo = async (id: string) => {
+    try {
+      const updatedTodo = await toggleTodoRequest(id);
+      setTodos(prev =>
+        prev.map(todo =>
+          todo._id === id ? updatedTodo : todo
+        )
+      );
+    } catch (err) {
+      console.error("Toggle failed", err);
+    }
+  };
+  return { todos, loading, error, retry: () => loadTodos(), addTodo, deleteTodo, toggleTodo };
 }

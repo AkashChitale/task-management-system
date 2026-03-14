@@ -5,19 +5,7 @@ import { useTodos } from "../hooks/useTodos";
 import "./TodosPage.css";
 
 function TodosPage() {
-const { todos, loading, error, retry } = useTodos();
-
-  const toggleTodo = (id: string) => {
-    console.log("toggle", id);
-  };
-
-  const deleteTodo = (id: string) => {
-    console.log("delete", id);
-  };
-
-  const addTodo = (todo: any) => {
-    console.log("add", todo);
-  };
+const { todos, loading, error, retry, addTodo, deleteTodo, toggleTodo } = useTodos();
 
 
   if (loading) return <TodoSkeleton />;

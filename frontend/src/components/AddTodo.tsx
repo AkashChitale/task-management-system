@@ -3,9 +3,8 @@ import "./AddTodo.css";
 
 type Todo = {
   title: string;
-  desc: string;
-  dueDate: string;
-  completed: boolean;
+  description?: string;
+  dueDate?: string;
 };
 
 type AddTodoProps = {
@@ -38,9 +37,8 @@ export default function AddTodo({ onAdd }: AddTodoProps) {
 
     onAdd({
       title,
-      desc,
-      dueDate: `${date} ${time}`,
-      completed: false,
+      description: desc || undefined,
+      dueDate: date ? `${date} ${time || "00:00"}` : undefined
     });
 
     setTitle("");

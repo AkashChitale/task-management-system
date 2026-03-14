@@ -1,4 +1,5 @@
 import type { Todo } from "../types/todo";
+import { formatRelativeDate } from "../utils/dateFormatter";
 import "./TodoItem.css";
 
 interface Props {
@@ -27,11 +28,15 @@ const TodoItem = ({ todo, onToggle, onDelete }: Props) => {
           <p className="todo-desc">{todo.description}</p>
         )}
 
-        {todo.dueDate && (
+        {todo.dueDate? (
           <span className="todo-date">
-            Due {new Date(todo.dueDate).toLocaleDateString()}
+            Due {formatRelativeDate(todo.dueDate)}
           </span>
-        )}
+        ):
+        (<span className="todo-date">
+            No due date
+          </span>)
+        } 
 
       </div>
 
