@@ -92,4 +92,28 @@ const updateTodo = asyncHandler(async (req: AuthRequest, res: Response, next: Ne
     res.status(200).json(todo);
 });
 
-export { getTodos, createTodo, deleteTodo, updateTodo };
+
+// PATCH /todos/:id/toggle
+
+const toggleTodo = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = req.userId;
+  const todoId = req.params.id as string;
+
+  if (!mongoose.Types.ObjectId.isValid(todoId)) {
+    throw new AppError("Invalid Todo ID", 400);
+  }
+
+  const todo = await Todo.findOne({ _id: todoId, userId });
+
+  if (!todo) {
+    throw new AppError("Todo not found", 404);
+  }
+
+  todo.completed = !todo.completed;
+
+  await todo.save();
+
+  res.status(200).json(todo);
+});
+
+export { getTodos, createTodo, deleteTodo, updateTodo, toggleTodo };
