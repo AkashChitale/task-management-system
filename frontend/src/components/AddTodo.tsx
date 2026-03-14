@@ -38,11 +38,13 @@ export default function AddTodo({ onAdd }: AddTodoProps) {
     onAdd({
       title,
       description: desc || undefined,
-      dueDate: date ? `${date} ${time || "00:00"}` : undefined
+      dueDate: date
+      ? new Date(`${date}T${time || "00:00"}`).toISOString()
+      : undefined
     });
 
     setTitle("");
-    setDesc("");
+    setDesc("");  
     setDate("");
     setTime("");
     setExpanded(false);
