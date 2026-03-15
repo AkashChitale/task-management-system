@@ -1,0 +1,45 @@
+.skeleton * {
+  animation: shimmer 4s infinite linear;
+  background: linear-gradient(
+    to right,
+    #e5e7eb 0%,
+    #f3f4f6 50%,
+    #e5e7eb 100%
+  );
+  background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+}
+
+.skeleton-title {
+  width: 100%;
+  height: 14px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.skeleton-desc {
+  width: 220px;
+  height: 12px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.skeleton-date {
+  width: 90px;
+  height: 10px;
+  border-radius: 4px;
+}

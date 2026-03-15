@@ -6,6 +6,12 @@
   transition: all 0.18s ease;
 }
 
+@media (min-width: 768px) {
+  .addtodo-container {
+    width: 500px;
+  }
+}
+
 .addtodo-container.expanded {
   border-color: #2563eb;
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.08);

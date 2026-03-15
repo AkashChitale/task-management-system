@@ -1,6 +1,7 @@
 .todo-list {
   display: flex;
   flex-direction: column;
+  /* min-width: 400px; */
 }
 
 .empty {

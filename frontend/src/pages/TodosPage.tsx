@@ -7,9 +7,6 @@ import "./TodosPage.css";
 function TodosPage() {
 const { todos, loading, error, retry, addTodo, deleteTodo, toggleTodo } = useTodos();
 
-
-  if (loading) return <TodoSkeleton />;
-
   if (error)
     return (
       <div>
@@ -25,11 +22,14 @@ const { todos, loading, error, retry, addTodo, deleteTodo, toggleTodo } = useTod
 
       <AddTodo onAdd={addTodo} />
 
+      {loading ? 
+      <TodoSkeleton /> :
       <TodoList
         todos={todos}
         onToggle={toggleTodo}
         onDelete={deleteTodo}
-      />
+      />}
+      
 
     </div>
   );

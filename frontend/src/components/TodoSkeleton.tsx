@@ -1,18 +1,30 @@
+import "./TodoSkeleton.css";
+import "./TodoList.css"
+
+const TodoSkeletonItem = () => {
+  return (
+    <div className="todo-item skeleton">
+
+      <div className="skeleton-checkbox" />
+
+      <div className="todo-text" style={{ borderRadius: "4px" }}>
+        <div className="skeleton-title" />
+        <div className="skeleton-desc" />
+        <div className="skeleton-date" />
+      </div>
+
+
+    </div>
+  );
+};
+
 const TodoSkeleton = () => {
   return (
-    <ul>
-      {[1, 2, 3].map((i) => (
-        <li
-          key={i}
-          style={{
-            height: "16px",
-            marginBottom: "8px",
-            backgroundColor: "#e5e7eb",
-            borderRadius: "4px",
-          }}
-        />
+    <div className="todo-list">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <TodoSkeletonItem key={i} />
       ))}
-    </ul>
+    </div>
   );
 };
 

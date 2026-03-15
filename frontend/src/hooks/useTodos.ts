@@ -25,7 +25,7 @@ export function useTodos() {
         if ((error as Error).name !== 'AbortError' && (error as Error).name !== 'CanceledError') {
             setError((error as Error).message);
         }
-        toast.error("Failed to load todos");
+        // toast.error("Failed to load todos");
     } finally {
         setLoading(false);
       }
