@@ -52,25 +52,30 @@ export function useTodos() {
 
   // DELETE TODO
   const deleteTodo = async (id: string) => {
+    const previousTodos = todos;
+    setTodos(prev => prev.filter(todo => todo._id !== id));
     try {
       await deleteTodoRequest(id);
-      setTodos(prev => prev.filter(todo => todo._id !== id));
     } catch (err) {
       console.error("Delete failed", err);
+      setTodos(previousTodos); // Rollback on failure
     }
   };
 
   // TOGGLE TODO
   const toggleTodo = async (id: string) => {
+    const previousTodo = todos;
+    setTodos(prev =>
+      prev.map(todo =>
+        todo._id === id ? { ...todo, completed: !todo.completed }
+        : todo
+      )
+    );
     try {
-      const updatedTodo = await toggleTodoRequest(id);
-      setTodos(prev =>
-        prev.map(todo =>
-          todo._id === id ? updatedTodo : todo
-        )
-      );
+      await toggleTodoRequest(id);
     } catch (err) {
-      console.error("Toggle failed", err);
+      console.error("Toggle failed, rolling back", err);
+      setTodos(previousTodo); // Rollback on failure
     }
   };
   return { todos, loading, error, retry: () => loadTodos(), addTodo, deleteTodo, toggleTodo };
