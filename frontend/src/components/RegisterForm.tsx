@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { registerRequest } from "../api/auth.api";
 import { getUserFriendlyError, isValidEmail, validatePassword } from "../utils/errorMessages";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import "./Auth.css";
 
 const RegisterForm = () => {
@@ -59,7 +60,7 @@ const RegisterForm = () => {
         email: normalizedEmail,
         password: normalizedPassword,
       });
-
+      toast.success("Account created successfully! Please login.");
       navigate("/login");
 
     } catch (err: any) {

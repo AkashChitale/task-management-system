@@ -6,6 +6,7 @@ import {
     toggleTodoRequest 
  } from "../api/todos.api";
 import type { Todo } from "../types/todo";
+import { toast } from "sonner";
 
 export function useTodos() {
 
@@ -24,6 +25,7 @@ export function useTodos() {
         if ((error as Error).name !== 'AbortError' && (error as Error).name !== 'CanceledError') {
             setError((error as Error).message);
         }
+        toast.error("Failed to load todos");
     } finally {
         setLoading(false);
       }
@@ -45,8 +47,10 @@ export function useTodos() {
     try {
       const newTodo = await addTodoRequest(todoData);
       setTodos(prev => [newTodo, ...prev]);
+      toast.success("Todo added successfully");
     } catch (err) {
       console.error("Add todo failed", err);
+      toast.error("Failed to add todo");
     }
   };
 
@@ -56,9 +60,10 @@ export function useTodos() {
     setTodos(prev => prev.filter(todo => todo._id !== id));
     try {
       await deleteTodoRequest(id);
+      toast.success("Todo deleted successfully");
     } catch (err) {
-      console.error("Delete failed", err);
       setTodos(previousTodos); // Rollback on failure
+      toast.error("Failed to delete todo");
     }
   };
 
@@ -73,9 +78,11 @@ export function useTodos() {
     );
     try {
       await toggleTodoRequest(id);
+      toast.success("Todo updated successfully");
     } catch (err) {
       console.error("Toggle failed, rolling back", err);
       setTodos(previousTodo); // Rollback on failure
+      toast.error("Failed to update todo");
     }
   };
   return { todos, loading, error, retry: () => loadTodos(), addTodo, deleteTodo, toggleTodo };

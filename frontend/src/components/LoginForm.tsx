@@ -4,6 +4,7 @@ import { loginRequest } from "../api/auth.api";
 import { useAuth } from "../hooks/useAuth";
 import { getUserFriendlyError, isValidEmail, validatePassword } from "../utils/errorMessages";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 import "./Auth.css";
 
 const LoginForm = () => {
@@ -50,6 +51,7 @@ const LoginForm = () => {
       });
 
       login(data.accessToken, data.user);
+      toast.success("Logged in successfully!");
       navigate("/todos");
 
     } catch (err: any) {
