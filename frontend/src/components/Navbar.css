@@ -1,28 +1,35 @@
-
 .app-navbar {
-	min-height: var(--app-navbar-height);
-	padding: 12px 20px;
-	border-bottom: 1px solid var(--app-border);
-	background: var(--app-surface);
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--app-navbar-height);
+
+  padding: 0 20px;
+  border-bottom: 1px solid var(--app-border);
+  background: var(--app-surface);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  z-index: 1000;
 }
 
 .app-navbar__welcome {
-	font-weight: 600;
+  font-weight: 600;
 }
 
 .app-navbar__button {
-	border: 1px solid var(--app-border);
-	background: #f2f5ff;
-	color: #1f2a44;
-	border-radius: 999px;
-	padding: 8px 14px;
-	font-weight: 600;
-	cursor: pointer;
+  border: 1px solid var(--app-border);
+  background: #f2f5ff;
+  color: #1f2a44;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
 .app-navbar__button:hover {
-	background: #e8edff;
+  background: #e8edff;
 }

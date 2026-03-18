@@ -17,19 +17,21 @@ const { todos, loading, error, retry, addTodo, deleteTodo, toggleTodo } = useTod
 
   return (
     <div className="todo-page">
+      <div className="task-header">
+        <h2>My Tasks</h2>
 
-      <h2>My Tasks</h2>
+        <AddTodo onAdd={addTodo} />
+      </div>
 
-      <AddTodo onAdd={addTodo} />
-
-      {loading ? 
-      <TodoSkeleton /> :
-      <TodoList
-        todos={todos}
-        onToggle={toggleTodo}
-        onDelete={deleteTodo}
-      />}
-      
+      <div className="task-content">
+        {loading ? 
+        <TodoSkeleton /> :
+        <TodoList
+          todos={todos}
+          onToggle={toggleTodo}
+          onDelete={deleteTodo}
+        />}
+      </div>
 
     </div>
   );

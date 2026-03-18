@@ -1,6 +1,14 @@
 .todo-page {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
   max-width: 620px;
-  margin: 40px auto;
+  margin-left: auto;
+  margin-right: auto;
   padding: 0 16px;
 }
 
@@ -15,5 +23,34 @@
   background: #ffffff;
   border: 1px solid #e6e6e6;
   border-radius: 8px;
-  overflow: hidden;
+  /* overflow: hidden; */
+} 
+
+.task-header {
+  padding-top: 16px;
+  flex-shrink: 0;
+}
+
+.task-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 20px 0;
+}
+
+.task-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.task-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.task-content::-webkit-scrollbar-thumb {
+  background: #cfd6e6;
+  border-radius: 10px;
+}
+
+.task-content::-webkit-scrollbar-thumb:hover {
+  background: #aeb8d0;
 }

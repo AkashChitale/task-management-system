@@ -2,7 +2,7 @@
   flex: 1;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   padding: 24px;
   background:
     radial-gradient(circle at 20% 15%, rgba(74, 122, 255, 0.22), transparent 42%),
