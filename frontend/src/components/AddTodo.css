@@ -79,3 +79,31 @@
 .addtodo-btn:active {
   transform: scale(0.96);
 }
+
+@media (max-width: 640px) {
+  .addtodo-container {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .addtodo-main-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .addtodo-title {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .addtodo-date,
+  .addtodo-time {
+    min-width: 0;
+  }
+
+  .addtodo-btn {
+    flex-shrink: 0;
+  }
+}

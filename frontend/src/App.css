@@ -36,3 +36,7 @@ body {
   flex-direction: column;
   overflow : hidden;
 }
+
+.app-content.full-width {
+  margin-top: 0;
+}

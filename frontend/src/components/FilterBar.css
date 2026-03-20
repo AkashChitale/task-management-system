@@ -2,6 +2,7 @@
   display: flex;
   gap: 8px;
   margin: 12px 0 16px;
+  flex-wrap: wrap;
 }
 
 .filter-btn {
@@ -35,4 +36,16 @@
 .filter-btn:active {
   transform: scale(0.95);
   box-shadow: 0 2px 6px rgba(79, 124, 255, 0.3);
+}
+
+@media (max-width: 640px) {
+  .filter-bar {
+    gap: 6px;
+    margin: 10px 0 14px;
+  }
+
+  .filter-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
 }
