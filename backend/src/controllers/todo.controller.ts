@@ -12,17 +12,21 @@ const getTodos = asyncHandler(async (req: AuthRequest, res: Response, next: Next
 
     const userId = req.userId!; // Assuming req.user is set by auth middleware (guaranteed by the auth middleware)
     const pages = parseInt((req as any).validatedQuery?.page) || 1;
-    const limit = parseInt((req as any).validatedQuery?.limit) || 5;
+    const limit = parseInt((req as any).validatedQuery?.limit) || 10;
     const skip = (pages - 1) * limit;
 
     const todos = await Todo.find({ userId })
     .skip(skip)
-    .limit(limit)
+    .limit(limit+1)
     .sort({ createdAt: -1 }); // Sort by creation date, newest first
 
     const total = await Todo.countDocuments({ userId });
-
-    res.status(200).json({pages, limit, total, todos });
+    let hasMore = false;
+    if(todos.length > limit) {
+      hasMore = true;
+      todos.pop();
+    }
+    res.status(200).json({pages, limit, total, todos, hasMore });
 });
 
 const createTodo = asyncHandler(async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -30,7 +34,8 @@ const createTodo = asyncHandler(async (req: AuthRequest, res: Response, next: Ne
     const user = await User.findById(userId);
     const newTodo = new Todo({ ...req.body, userId });
     await newTodo.save();
-    if(req.body.dueDate) {
+    console.log("New todo created:", newTodo);
+    if(req.body.dueDate && false) { // Disable reminder for now
       // const delay = new Date(req.body.dueDate).getTime() - Date.now();
       console.log("Scheduling reminder for todo:", newTodo.title, "at", req.body.dueDate);
       const delay = 5000; // 5 seconds for testing purpose
