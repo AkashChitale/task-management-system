@@ -7,7 +7,7 @@ import "./TodosPage.css";
 import { useState } from "react";
 
 function TodosPage() {
-const { todos, loading, error, retry, addTodo, deleteTodo, toggleTodo } = useTodos();
+const { todos, loading, error, retry, addTodo, deleteTodo, toggleTodo, hasMore , setPage} = useTodos();
 
   const[activeFilter, setActiveFilter] = useState<FilterType>("all");
 
@@ -27,9 +27,11 @@ const { todos, loading, error, retry, addTodo, deleteTodo, toggleTodo } = useTod
     return true;
   });
 
-  const sortedTodos = [...filteredTodos].sort((a, b) => {
-    return new Date(a.dueDate ?? new Date()).getTime() - new Date(b.dueDate ?? new Date()).getTime();
-  });
+  const loadMore = () => {
+    if (loading || !hasMore) return;
+    setPage(prev => prev + 1);
+  };
+
 
   if (error)
     return (
@@ -50,13 +52,17 @@ const { todos, loading, error, retry, addTodo, deleteTodo, toggleTodo } = useTod
       <FilterBar activeFilter={activeFilter} onChange={setActiveFilter} />
 
       <div className="task-content">
-        {loading ? 
-        <TodoSkeleton /> :
         <TodoList
-          todos={sortedTodos}
+          todos={filteredTodos}
           onToggle={toggleTodo}
           onDelete={deleteTodo}
-        />}
+        />
+        { loading && <TodoSkeleton /> }
+        {!loading && hasMore && (
+          <button className="load-more-btn" onClick={loadMore}>
+            {loading ? "Loading..." : "Load More"}
+          </button>
+        )}
       </div>
 
     </div>

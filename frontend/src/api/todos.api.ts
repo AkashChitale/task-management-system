@@ -8,10 +8,18 @@ export type TodoPayload = {
   dueDate?: string;
 };
 
-export const fetchTodos = async (signal?: AbortSignal): Promise<Todo[]> => {
+export type fetchTodosResponse = {
+  todos: Todo[];
+  hasMore: boolean;
+};
+
+export const fetchTodos = async (pageNumber: number, signal?: AbortSignal): Promise<fetchTodosResponse> => {
     try {
-        const response = await axiosInstance.get("/todos", { signal });
-        return response.data.todos;
+        const response = await axiosInstance.get("/todos", { params: { page: pageNumber }, signal });
+        return {
+            todos: response.data.todos,
+            hasMore: response.data.hasMore
+        };
     } catch (error: any) {
         if (error.name === 'AbortError' || error.name === 'CanceledError') {
             throw error;

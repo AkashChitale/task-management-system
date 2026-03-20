@@ -18,7 +18,7 @@ const getTodos = asyncHandler(async (req: AuthRequest, res: Response, next: Next
     const todos = await Todo.find({ userId })
     .skip(skip)
     .limit(limit+1)
-    .sort({ createdAt: -1 }); // Sort by creation date, newest first
+    .sort({ dueDate: 1 }); // Sort by due date, newest first
 
     const total = await Todo.countDocuments({ userId });
     let hasMore = false;

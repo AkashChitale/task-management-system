@@ -10,6 +10,8 @@ import { toast } from "sonner";
 
 export function useTodos() {
 
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [hasMore, setHasMore] = useState<boolean>(false);
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,8 +20,9 @@ export function useTodos() {
     try {
         setError(null);
         setLoading(true);
-        const data = await fetchTodos(signal);
-        setTodos(data);
+        const data = await fetchTodos(pageNumber, signal);
+        setTodos(prev => [...prev, ...data.todos]);
+        setHasMore(data.hasMore);
     } catch (error: unknown) {
         // Don't set error state if request was cancelled
         if ((error as Error).name !== 'AbortError' && (error as Error).name !== 'CanceledError') {
@@ -28,8 +31,8 @@ export function useTodos() {
         // toast.error("Failed to load todos");
     } finally {
         setLoading(false);
-      }
-  }, []);
+      } 
+  }, [pageNumber]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -46,7 +49,7 @@ export function useTodos() {
   const addTodo = async (todoData: Omit<Todo, "_id" | "completed" | "createdAt">) => {
     try {
       const newTodo = await addTodoRequest(todoData);
-      setTodos(prev => [newTodo, ...prev]);
+      setTodos(prev => [...prev, newTodo]);
       toast.success("Todo added successfully");
     } catch (err) {
       console.error("Add todo failed", err);
@@ -85,5 +88,5 @@ export function useTodos() {
       toast.error("Failed to update todo");
     }
   };
-  return { todos, loading, error, retry: () => loadTodos(), addTodo, deleteTodo, toggleTodo };
+  return { todos, setTodos, loading, error, retry: () => loadTodos(), addTodo, deleteTodo, toggleTodo, hasMore, setPage: setPageNumber };
 }
