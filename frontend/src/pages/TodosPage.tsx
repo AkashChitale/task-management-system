@@ -27,6 +27,10 @@ const { todos, loading, error, retry, addTodo, deleteTodo, toggleTodo } = useTod
     return true;
   });
 
+  const sortedTodos = [...filteredTodos].sort((a, b) => {
+    return new Date(a.dueDate ?? new Date()).getTime() - new Date(b.dueDate ?? new Date()).getTime();
+  });
+
   if (error)
     return (
       <div>
@@ -49,7 +53,7 @@ const { todos, loading, error, retry, addTodo, deleteTodo, toggleTodo } = useTod
         {loading ? 
         <TodoSkeleton /> :
         <TodoList
-          todos={filteredTodos}
+          todos={sortedTodos}
           onToggle={toggleTodo}
           onDelete={deleteTodo}
         />}
