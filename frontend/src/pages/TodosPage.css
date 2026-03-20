@@ -38,19 +38,12 @@
   padding: 20px 0;
 }
 
+.task-content {
+  /* ... your existing styles ... */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 .task-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.task-content::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.task-content::-webkit-scrollbar-thumb {
-  background: #cfd6e6;
-  border-radius: 10px;
-}
-
-.task-content::-webkit-scrollbar-thumb:hover {
-  background: #aeb8d0;
+  display: none; /* Chrome, Safari and Opera */
 }
