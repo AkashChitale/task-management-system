@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "dev": "NODE_OPTIONS=--loader=ts-node/esm node --no-warnings=ExperimentalWarning src/index.ts",
-    "worker": "ts-node-esm src/workers/reminder.worker.ts"
+    "worker": "ts-node-esm src/workers/reminder.worker.ts",
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
