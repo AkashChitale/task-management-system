@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import UserRouter from './routes/user.route.js';
@@ -16,6 +17,10 @@ const PORT: number = parseInt(process.env.PORT || "3000", 10);
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({
+  origin: "https://mytasks.akashchitale.tech",
+  credentials: true
+}));
 
 app.get('/api', (req: Request, res: Response) => {
   res.send('Welcome to the Todo API');
