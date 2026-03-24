@@ -2,7 +2,7 @@ import axios from 'axios'
 import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios'
 
 const axiosInstance: AxiosInstance = axios.create({
-    baseURL: "/api",
+    baseURL: import.meta.env.VITE_API_BASE_URL,
     withCredentials: true // this is because browsers are shy to send cookies or session info
 });
 
