@@ -66,6 +66,65 @@
   background: #f2f5ff;
 }
 
+.empty-state-card {
+  border: 1px solid #d6deef;
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 10px 24px rgba(31, 47, 86, 0.08);
+}
+
+.empty-state-icon {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 10px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #eaf2ff;
+  font-size: 1.15rem;
+}
+
+.empty-state-card h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #1f2a44;
+}
+
+.empty-state-card p {
+  margin: 10px auto 0;
+  max-width: 420px;
+  color: #5c6782;
+  line-height: 1.5;
+}
+
+.empty-state-cta {
+  margin-top: 16px;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.empty-state-cta:hover {
+  background: #1d4ed8;
+}
+
+.empty-state-cta:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.3);
+  outline-offset: 2px;
+}
+
+.filtered-empty-state {
+  margin: 8px 0 0;
+  text-align: center;
+  color: #5c6782;
+}
+
 @media (max-width: 640px) {
   .todo-page {
     padding: 0 12px;
@@ -79,4 +138,8 @@
   .task-content {
     max-height: calc(100vh - 220px);
   }
-}
+
+  .empty-state-card {
+    padding: 18px 16px;
+  }
+} 

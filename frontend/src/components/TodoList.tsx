@@ -11,7 +11,7 @@ interface Props {
 const TodoList = ({ todos, onToggle, onDelete }: Props) => {
 
   if (todos.length === 0) {
-    return <p className="empty">No tasks yet</p>;
+    return null;
   }
 
   return (

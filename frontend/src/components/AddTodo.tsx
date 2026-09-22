@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, type RefObject } from "react";
 import "./AddTodo.css";
 
 type Todo = {
@@ -9,9 +9,10 @@ type Todo = {
 
 type AddTodoProps = {
   onAdd: (todo: Todo) => void;
+  titleInputRef?: RefObject<HTMLInputElement | null>;
 };
 
-export default function AddTodo({ onAdd }: AddTodoProps) {
+export default function AddTodo({ onAdd, titleInputRef }: AddTodoProps) {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [date, setDate] = useState("");
@@ -57,8 +58,11 @@ export default function AddTodo({ onAdd }: AddTodoProps) {
         >
             <div className="addtodo-main-row">
             <input
+                ref={titleInputRef}
+                id="add-todo-title-input"
                 className="addtodo-title"
                 placeholder="Add a task"
+                aria-label="Task title"
                 value={title}
                 onFocus={() => setExpanded(true)}
                 onChange={(e) => setTitle(e.target.value)}
@@ -70,6 +74,7 @@ export default function AddTodo({ onAdd }: AddTodoProps) {
                 <input
                     type="date"
                     className="addtodo-date"
+                    aria-label="Due date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
                 />
@@ -77,11 +82,12 @@ export default function AddTodo({ onAdd }: AddTodoProps) {
                 <input
                     type="time"
                     className="addtodo-time"
+                    aria-label="Due time"
                     value={time}
                     onChange={(e) => setTime(e.target.value)}
                 />
 
-                <button className="addtodo-btn" onClick={handleAdd}>
+                <button className="addtodo-btn" onClick={handleAdd} aria-label="Add task">
                     +
                 </button>
                 </>
@@ -92,6 +98,7 @@ export default function AddTodo({ onAdd }: AddTodoProps) {
             <input
                 className="addtodo-desc"
                 placeholder="Description (optional)"
+                aria-label="Task description"
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
             />
