@@ -5,12 +5,18 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import ErrorBoundary from "../components/ErrorBoundary";
 import { useAuth } from "../hooks/useAuth";
 import RegisterPage from "../pages/RegisterPage";
+import FullPageStatus from "../components/FullPageStatus";
 
 const HomeRedirect = () => {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <FullPageStatus
+        title="Getting your workspace ready…"
+        message="Just a moment while we set things up."
+      />
+    );
   }
 
   return <Navigate to={isAuthenticated ? "/todos" : "/login"} replace />;
